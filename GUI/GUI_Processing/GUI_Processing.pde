@@ -490,10 +490,9 @@ void logSwitch(boolean isOff) {
     writeLog = false;
   } else {
     writeLog = true;
-    String fileName = "log/" + day() + "-" + month() + "[" + Kp + "," + Ki + "," + Kd + "].txt";
+    String fileName = "log/" + day() + "-" + month() + "[" + Kp + "," + Ki + "," + Kd + "].csv";
     output = createWriter(fileName);
-    output.println("PID =" + " | " + Kp + " | " + Ki + " | " + Kd);
-    output.println("- - - - - -");
+    output.println("t (s);roll (deg);TL (%);TR (%)");
   }
 }
 
@@ -610,7 +609,7 @@ void treatData(){
   // write in log file
   
   if(packetToLog){
-    output.println(measure_time + " | " + roll + " | " + throttleLeft + " | " + throttleRight);
+    output.println(measure_time + ";" + roll + ";" + throttleLeft + ";" + throttleRight);
     packetToLog = false;
   }
 
