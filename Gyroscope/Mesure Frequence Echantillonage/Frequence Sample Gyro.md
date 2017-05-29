@@ -10,6 +10,7 @@
 
 On souhaite mesurer la fréquence effective d’échantillonnage de la centrale inertielle, afin de vérifier qu’elle correspond à celle choisie dans la librairie Arduino. Les valeurs possibles de ces fréquences sont 25, 50,100 et 200Hz – à noter que les valeurs sont apparemment bruitées *(voir commentaires librairie Arduino)* pour 200Hz.
 
+
 ### Protocole
 
 La librairie I2Cdev-MPU5060 indique la valeur à donner et facilite l’envoi des bytes des différents registres du mpu afin de modifier la fréquence d’envoi de données du buffer FIFO du capteur, permettant de choisir la fréquence d’échantillonnage du capteur. 
@@ -21,17 +22,26 @@ On mesure le temps entre deux acquisitions capteurs et on le récupère via le m
 On calcule la moyenne sur 5 mesures capteurs.
 
 
-
 ### Résultats
 
 On observe que les fréquences expérimentales du FIFO sont plus élevées que les valeurs effectives données par les développeurs de la librairie.
 
-Afin d’optimiser la boucle d’asservissement, on souhaite maximiser la fréquence de lecture de données capteur. Il s’agit maintenant de vérifier ou non si les données sont suffisamment fiables, dans le cas où f=200Hz et f=100Hz.
+Il est donc vraisemblable qu'il y ait un problème de code.
 
-### Remarques
+
+### Identification de l'erreur
 
 En suivant le protocole, on a réalisé que le code source de mon objet gyro était incorrect : le booléen newDataReady, représentant le déclenchement de l'évènement associé à la réception d'une nouvelle trame de données provenant du gyroscope,  n’était jamais réinitialisé à la valeur false. 
 
 Du point de vue du code global, l’objet gyro contenait a priori constamment de nouvelles valeurs pour les paramètres dynamiques du système, ce qui n’était absolument pas le cas (cette valeur s’actualise à la fréquence choisie pour le fifo du gyroscope). 
 
 La conséquence était que le nombre de calculs effectués était beaucoup trop important sans que cela ne soit utile. On a donc ajouté une méthode setNoDataReady() permettant de réinitialiser la valeur du booléen.
+
+
+## Conclusion
+
+L'expérience m'a permis de prendre conscience d'une erreur de codage de l'objet gyro. J'ai donc décidé de réaliser une seconde expérience similaire pour valider la correction de l'erreur, et ainsi valider la bonne compréhension du protocole de communication et de sa gestion par les composants embarqués.
+
+Afin de pouvoir détecter plus facilement une erreur similaire, et d'avoir plus de précision sur les mesures renvoyées par le capteur, on a décidé d'horodater chaque mesure du gyroscope afin de mieux décrire les acquisitions, plutôt que d'horodater les trames reçues par le programme utilisateur.
+
+Afin d’optimiser la boucle d’asservissement, on souhaite maximiser la fréquence de lecture de données capteur. Il s’agit maintenant de vérifier ou non si les données sont suffisamment fiables, dans le cas où f=200Hz et f=100Hz.
