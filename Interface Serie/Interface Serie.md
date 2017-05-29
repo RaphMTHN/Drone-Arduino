@@ -35,7 +35,7 @@ Ils sont envoyés à la fin de chaque paquet de bits afin de permettre au récep
 
 ### Port Serial Arduino
 
-Les vitesses usuelles sont 9600 bits/s et 115200 bits/s. Il n’y a pas de bit de parité, un bit de départ et un bit d’arrêt par défaut, et les paquets de bits sont des octets (8 bits).
+Les baudrates usuels sont 9600 bits/s et 115200 bits/s. Il n’y a pas de bit de parité, un bit de départ et un bit d’arrêt par défaut, et les paquets de bits sont des octets (8 bits).
 
 ![Figure 1: Trame Serial](images/trame_serial.jpg)
 
@@ -55,7 +55,7 @@ Dans le cas des commandes moteur, les données sont comprises dans l’intervall
 
 Dans le cas de l’angle de roulis, les données sont comprises dans l’intervalle [-180,180]. Différents choix peuvent être effectués : choisir dès l’acquisition des données gyro l’intervalle [0,2PI] ou [0,360] ; conserver l’intervalle [-PI,PI] ou [-180,180].
 
-Pour conserver le même protocole que le précédent, la solution retenue est de récupérer lors de l’acquisition l’angle dans un intervalle [-180,180] (plus pratique pour la commande), et de décaler l’intervalle lors de l’envoi sous la forme [0,360]. En décalant à nouveau lors de la réception, on aura alors des données avec une précision au centième de degré. (A COMPARER AVEC LA PRECISION DU CAPTEUR)
+Pour conserver le même protocole que le précédent, la solution retenue est de récupérer lors de l’acquisition l’angle dans un intervalle `[-180,180]` (plus pratique pour la commande), et de décaler l’intervalle lors de l’envoi sous la forme [0,360]. En décalant à nouveau lors de la réception, on aura alors des données avec une précision au centième de degré. (A COMPARER AVEC LA PRECISION DU CAPTEUR)
 
 
 Il est possible pour diverses raisons (notamment si le buffer est surchargé), qu’il y ait un décalage dans l’ordre d’envoi ou de réception des paquets (relativement rare). D’où la précaution suivante : on ajoute un compteur indiquant la position de lecture d'une trame en cours de réception, que l’on synchronise à l’aide de paquets supplémentaires indiquant le début et la fin de la trame.
@@ -80,13 +80,24 @@ De même, quand l’utilisateur impose un nouvel état de la maquette ou change 
 Afin de récupérer toutes les données reçues par Processing, en vue d’étudier le bon fonctionnement de la maquette et la détermination des performances en boucle fermée,  on implémente en parallèle du protocole Arduino <-> Processing, un enregistrement des données dans un fichier texte. On utilise pour cela l’objet Processing « PrintWriter » qui s’occupe de gérer cette fonctionnalité. 
 
 
-*TODO ...*
+## Durée de propagation d'une trame
 
-## Calcul des temps de transfert
+Afin d'optimiser la rapidité des transferts d'information via le port série de la carte arduino, on a choisi d'utiliser à chaque fois un baudrate égal à 115200 bit/s.
 
-### Objectifs
-
-On souhaite calculer précisément le temps de transfert de données via le protocole de communication décrit précédemment. Le protocole complet dans un sens implique : la préparation du paquet (choix des floats / int, conversion en byte), l’envoi du paquet, la réception du paquet, le traitement du paquet (reconversion). On rappelle que chaque paquet de données comprend un byte de début et un byte de fin.
+Pour une trame constituée de 10 paquets, sachant que chaque paquet possède 10 bits, la durée d'envoi d'une trame est de l'ordre de 1ms.
 
 
-### Synthèse des différents résultats
+### Qu'en est-il du protocole I2C ?
+
+Le protocole de transmission série utilisé entre la carte arduino et le mpu5060 est l'I2C. 
+
+Il s'agit d'un protocole série synchrone *(TODO )*
+
+Le baudrate utilisé par la bibliothèque mpu5060 s'élève à 400kbits/s, ce qui est nettement supérieur à celui du protocole entre le GUI et la carte de programmation.
+
+
+### Hypothèses simplificatrices concernant les durées de propagation
+
+Dans la suite, on considèrera que les durées de propagation des données entre le capteur, la carte Arduino et l'ordinateur sont négligeables. 
+
+En particulier, l'horodatage *(timestamp)* des données du gyroscope, réalisé lors de la réception des nouvelles données inertielles délivrées par le capteur sera considéré comme étant celui des mesures effectives du mpu.
