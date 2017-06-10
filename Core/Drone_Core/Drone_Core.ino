@@ -151,7 +151,7 @@ void loop() {
     
 
     // LECTURE DONNEES GYROSCOPE
-    gyro.acquireData();
+    gyro.operateGyro();
     if(gyro.hasNewData()){
       roll = gyro.getRoll();
       packetToWrite = true;

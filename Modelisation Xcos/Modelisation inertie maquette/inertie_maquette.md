@@ -18,3 +18,5 @@ Pour calculer l'inertie équivalente de la maquette par rapport à l'axe de roul
 Après calcul, on trouve une inertie :
 
 **Jeq = 4,77E-3 kg.m^2**
+
+On utilisera cette valeur dans la modélisation causale du système complet.

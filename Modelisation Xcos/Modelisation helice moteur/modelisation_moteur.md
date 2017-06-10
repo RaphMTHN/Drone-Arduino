@@ -26,13 +26,12 @@ On trouve alors Km = 954 rad.s^-1 , avec un coefficient de corrélation égal à
 
 Aucune réponse temporelle n'est disponible. On ne peut donc pas identifier directement la constante de temps tau. On prendra donc un ordre de grandeur, caractéristique des moteurs à courant continu, égal à 0.1s.
 
-** On prendra donc comme valeurs des paramètres : (Km,tau) = (954,0.1). **
-
 
 
 ## Conclusion
 
-Pour une modélisation plus fine du moteur, il aurait fallu disposer de capteurs de vitesse de rotation. Une fois la réponse temporelle mesurée, la détermination des coefficients Km et tau d'un premier ordre est accessible sans difficulté.
+- Pour une modélisation plus fine du moteur, il aurait fallu disposer de capteurs de vitesse de rotation. Une fois la réponse temporelle mesurée, la détermination des coefficients Km et tau d'un premier ordre est accessible sans difficulté.
 
-Des mesures envisageables sans installer de capteur sur le rotor sont une mesure de vitesse de rotation à l'aide d'un capteur optique (tachymètre laser et gommette réflechissante : ex RPM Laser DT2234C), et une identification de la constante de temps tau par analyse de la réponse sonore (l'amplitude de l'harmonique de fréquence sonore du régime permanent pouvant être mesurée au cours du temps par analyse spectrale de l'enregistrement micro par exemple).
+- Des mesures envisageables sans installer de capteur sur le rotor sont une mesure de vitesse de rotation à l'aide d'un capteur optique (tachymètre laser et gommette réflechissante : ex RPM Laser DT2234C), et une identification de la constante de temps tau par analyse de la réponse sonore (l'amplitude de l'harmonique de fréquence sonore du régime permanent pouvant être mesurée au cours du temps par analyse spectrale de l'enregistrement micro par exemple).
 
+- ** On prendra donc comme valeurs des paramètres : (Km,tau) = (954,0.1). **
