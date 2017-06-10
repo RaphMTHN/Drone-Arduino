@@ -24,11 +24,9 @@ Le tracé du graphique correspond indique que le régime linéaire semble attein
 
 On trouve alors Km = 954 rad.s^-1 , avec un coefficient de corrélation égal à 0.9999. On peut donc valider la modélisation linéaire des moteurs, du moins pour une plage de fonctionnement ne dépassant pas les 85%.
 
-Cette constante, appelée Kv par les constructeurs, est une des caractéristiques des moteurs brushless. Le Kv donné par le constructeur est Kv = 920 : l'ordre de grandeur est respecté.
-
 Aucune réponse temporelle n'est disponible. On ne peut donc pas identifier directement la constante de temps tau. On prendra donc un ordre de grandeur, caractéristique des moteurs à courant continu, égal à 0.1s.
 
-** On prendra donc comme valeurs des paramètres : (Kv,tau) = (954,0.1). **
+** On prendra donc comme valeurs des paramètres : (Km,tau) = (954,0.1). **
 
 
 

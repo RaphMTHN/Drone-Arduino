@@ -100,18 +100,41 @@ Les hélices installées sur les moteurs sont des [GemFan 6045](https://hobbykin
 
 En considérant que les profils d'hélices sont similaires, les coefficients de trainée et de poussée sont identiques.
 
-On peut alors calculer le coefficient K_h des hélices de la maquette : 
+On peut alors calculer le coefficient Kh des hélices de la maquette : 
 
-le coefficient directeur de la régression linéaire de la partie précédente est justement ce coefficient K_h' pour des hélices D'0.2375m et e'=0.02m.
+le coefficient directeur de la régression linéaire de la partie précédente est justement ce coefficient Kh' pour des hélices D'0.2375m et e'=0.02m.
 
-K_h' = 9,26E-06 N.(rad.s-1)^2
+Kh' = 9,26E-06 N.(rad.s-1)^2
 
-K_h = K_h' * (D^3 * e)/(D'^3 * e')
+Kh = Kh' * (D^3 * e)/(D'^3 * e')
 
 On trouve, et on retiendra donc pour la modélisation :
 
-** K_h = 1.75E-06 N.(rad.s-1)^2 **
+** Kh = 1.75E-06 N.(rad.s-1)^-2 **
 
+
+
+## Linéarisation de la loi de poussée de l'hélice
+
+
+Le cadre d'étude des systèmes asservis en Sciences Industrielles de l'Ingénieur et en Pysique étant celui des systèmes linéaires, invariants et continus, il est nécessaire de linéariser l'expression de la poussée de l'hélice. 
+
+On souhaite disposer d'une grande amplitude pour la vitesse de rotation du moteur. Les moteurs ont une commande à l'équilibre qui sera égale à 40%. Cela correspond à une vitesse de rotation égale à 382 rad.s^-1.
+
+On linéarise autour de ce point de fonctionnement :
+
+R_i = Kh_lin * b'_i + R_i_0
+
+Où : 
+
+- Kh_lin = 2 * Kh * b'_0
+
+- R_i_o = Kh * b'_0 ^2
+
+
+On retiendra donc le couple :
+
+(Kh_lin ; R_i_0) = (1,34E-3 N.(rad.s^-1)^-1 ; 0.255 N)
 
 
 ## Conclusion
