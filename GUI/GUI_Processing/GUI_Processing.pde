@@ -67,6 +67,7 @@ float throttleLeft;
 float throttleRight;
 float roll;
 int measure_time;
+int init_measure_time;
 
 void setup() {
   
@@ -524,9 +525,10 @@ void logSwitch(boolean isOff) {
     writeLog = false;
   } else {
     writeLog = true;
-    String fileName = "log/" + day() + "-" + month() + "[" + Kp + "," + Ki + "," + Kd + "].csv";
+    String fileName = "log/" + day() + "-" + month() + "-" + "-" + hour() +"-" + minute() + "[" + Kp + "," + Ki + "," + Kd + "].csv";
     output = createWriter(fileName);
-    output.println("t (s);roll (deg);TL (%);TR (%);cons (deg)");
+    output.println("t (s);roll (deg);cons (deg);TL (%);TR (%)");
+    init_measure_time = measure_time; 
   }
 }
 
@@ -654,7 +656,7 @@ void treatData(){
   // write in log file
   
   if(packetToLog){
-    output.println(measure_time + ";" + roll + ";" + throttleLeft + ";" + throttleRight + ";" + cons);
+    output.println( (measure_time - init_measure_time)/1e6 + ";" + roll  + ";" + cons + ";" + throttleLeft + ";" + throttleRight);
     packetToLog = false;
   }
 
