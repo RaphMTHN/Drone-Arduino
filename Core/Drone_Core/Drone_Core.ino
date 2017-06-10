@@ -53,9 +53,9 @@ bool packetToWrite = false;
 
 // arduino packet (read)
 
-const int arduinoPacketLength = 13;
+const int arduinoPacketLength = 15;
 
-//      { start,state,thConst,thAmp,end }
+//      { start,state,thConst,thAmp,Kp,Ki,Kd,cons,end }
 uint8_t arduinoPacket[arduinoPacketLength];
 int serialCount = 0;                 // current packet byte position
 int synced = 0;
@@ -145,6 +145,8 @@ void loop() {
       bytesToFloat(arduinoPacket[6],arduinoPacket[7],Kp);
       bytesToFloat(arduinoPacket[8],arduinoPacket[9],Ki);
       bytesToFloat(arduinoPacket[10],arduinoPacket[11],Kd);
+      bytesToFloat(arduinoPacket[12],arduinoPacket[13],consigne);
+      consigne-=180;
       packetToTreat = false;
     }
 

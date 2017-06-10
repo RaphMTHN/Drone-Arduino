@@ -24,6 +24,7 @@ Toggle calibSwitch, logSwitch;
 Button emergency;
 Textfield throttleConstField, throttleAmpField;
 Textfield KpField, KiField, KdField;
+Textfield consEchelonField;
 PImage[] ledImages, emgImages;
 float x;
 // SERIAL
@@ -40,10 +41,10 @@ int synced = 0;
 boolean packetToTreat = false;
 
 // arduino packet (write)
-int arduinoPacketLength = 13;
+int arduinoPacketLength = 15;
 
-//                     { start,state,thConst,thAmp,Kp,Ki,Kd, end }
-byte[] arduinoPacket = { '$' ,  0  ,  0,0  , 0,0  , 0,0  , 0,0  , 0,0  , '&' };
+//                     {start,state,thConst,thAmp ,  Kp  ,  Ki  ,  Kd  ,  cons  , end }
+byte[] arduinoPacket = { '$' ,  0  ,  0,0  , 0,0  , 0,0  , 0,0  , 0,0  , 0,0  , '&' };
 boolean packetToWrite = false;
 
 // log file
@@ -57,7 +58,9 @@ byte state = 0;
 float throttleConst;
 float throttleAmp;
 //
-float Kp=1, Ki=0, Kd=0.2;
+float cons;
+//
+float Kp=1, Ki=0, Kd=0.1;
 
 //
 float throttleLeft;
@@ -155,6 +158,9 @@ void setup() {
   KiField = cp5.addTextfield("KiField", 0, 0, 50, 25);
   KdField = cp5.addTextfield("KdField", 0, 0, 50, 25);
   
+  // create 1 textfield for consEchelon
+  consEchelonField = cp5.addTextfield("consEchelonField",0,0,50,25);
+  
   // SERIAL
   
   // open the serial port
@@ -181,6 +187,8 @@ void draw() {
     arduinoPacket[9] = floatToByte2(Ki);
     arduinoPacket[10] = floatToByte1(Kd);
     arduinoPacket[11] = floatToByte2(Kd);
+    arduinoPacket[12] = floatToByte1(cons+180);
+    arduinoPacket[13] = floatToByte2(cons+180);
     
     // send the packet
     port.write(arduinoPacket);
@@ -405,6 +413,32 @@ void draw() {
     KdField.setLock(true);
   }
   
+  
+  // consigne input Field : 
+  
+  // draw consEchelon input field
+  textSize(13);
+  textAlign(LEFT,CENTER);
+  fill(0,0,0);
+  text("Consigne Echelon (°)",width/2 + 450 - 150,height/2 + 50 + 85);
+  consEchelonField.setPosition(width/2 + 450 + 0, height/2 + 50 + 75);
+  textSize(15);
+  textAlign(CENTER,CENTER);
+  fill(0, 102, 153);
+  text("" + cons,width/2 + 450 + 100,height/2 + 50 + 85);
+   
+  // manage lock
+  
+    if(state == 1 || state == 2){
+    consEchelonField.setLock(false);
+    consEchelonField.setLock(false);
+    consEchelonField.setLock(false);
+  } else {
+    consEchelonField.setLock(true);
+    consEchelonField.setLock(true);
+    consEchelonField.setLock(true);
+  }
+  
   /* ------------- */
   
 }
@@ -492,7 +526,7 @@ void logSwitch(boolean isOff) {
     writeLog = true;
     String fileName = "log/" + day() + "-" + month() + "[" + Kp + "," + Ki + "," + Kd + "].csv";
     output = createWriter(fileName);
-    output.println("t (s);roll (deg);TL (%);TR (%)");
+    output.println("t (s);roll (deg);TL (%);TR (%);cons (deg)");
   }
 }
 
@@ -551,6 +585,17 @@ public void KdField(String theValue) {
   Kd = fValue;
 }
 
+// manage the consEchelon inputField
+public void consEchelonField(String theValue) {
+  float fValue = float(theValue);
+  if(Float.isNaN(fValue)) fValue = 0;
+  if(fValue > 25) fValue = 25;
+  if(fValue < -25) fValue = -25;
+  cons = fValue;
+  // envoi du paquet contenant la nouvelle consigne
+  if(state==2) packetToWrite = true;
+}
+
 
 // SERIAL
 
@@ -601,7 +646,7 @@ void treatData(){
     throttleLeft = bytesToFloat(processingPacket[6],processingPacket[7]);
     throttleRight = bytesToFloat(processingPacket[8],processingPacket[9]);
     roll = bytesToFloat(processingPacket[10],processingPacket[11])-180;
-    println("state = " + (int)state + " | time = " + measure_time + " | TL = " + throttleLeft + " | TR = " + throttleRight + " | roll = " + roll);
+    println("state = " + (int)state + " | time = " + measure_time + " | TL = " + throttleLeft + " | TR = " + throttleRight + " | roll = " + roll + " | cons = " + cons);
     if(writeLog && state==2) packetToLog = true;
     packetToTreat = false;
   }
@@ -609,7 +654,7 @@ void treatData(){
   // write in log file
   
   if(packetToLog){
-    output.println(measure_time + ";" + roll + ";" + throttleLeft + ";" + throttleRight);
+    output.println(measure_time + ";" + roll + ";" + throttleLeft + ";" + throttleRight + ";" + cons);
     packetToLog = false;
   }
 
