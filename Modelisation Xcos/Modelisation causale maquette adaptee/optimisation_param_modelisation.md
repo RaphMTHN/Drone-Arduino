@@ -71,16 +71,15 @@ T = 1.27s
 
 On trouve alors pour ces valeurs un couple 
 
-(tau_exp ; K_exp) = (0.078s ; 5.09)
+(tau_exp ; K_exp) = (0.078s ; 19.09)
 
 L'écart entre tau_exp et la valeur estimée était assez prévisible. Néanmoins l'ordre de grandeur était correct.
 
-L'écart entre le gain K_exp et le gain théorique K_théo est :
+L'écart entre le gain K_exp et le gain théorique K_théo est assez important, mais l'ordre de grandeur est respecté :
 
-delta(K) = (K_exp-Kthéo)/K_exp = 2.7 %
+K_exp/K_théo = 3.85
 
-C'est un écart tout à fait acceptable, et conforte grandement la démarche de modélisation et les hypothèses formulées.
-
+On prendra finalement ce coefficient correctif global afin de relier la modélisation au comportement de la maquette réelle.
 
 
 ## Conclusion
@@ -98,7 +97,6 @@ C'est un écart tout à fait acceptable, et conforte grandement la démarche de 
 - La constante de temps mesurée remplace l'ordre de grandeur que l'on avait posé dans l'étape de modélisation du moteur.
 
 
-- L'écart entre le gain mesuré et le gain théorique (résultant de l'ensemble des étapes de modélisation des composants) est égal à 2.7%.
+- On utilise un gain correctif afin de modéliser au mieux le système réel : ce gain sera pris : Kcorrectif = K_exp/K_théo = 3.85. 
 
-
-- On utilise un gain correctif afin de modéliser au mieux le système réel : ce gain sera pris : Kcorrectif = K_exp/K_théo = 1.027.
+- Ce correctif est assez grand : le modèle de connaissance n'est pas assez précis pour décrire le comportement réel du système. Il faudra revoir la détermination des paramètres des différentes relations associées aux composants si l'on souhaite diminuer l'écart entre modèle de connaissance et modèle expérimental.
